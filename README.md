@@ -36,7 +36,7 @@ Accounts can also be deactivated by clicking the ❌ button when a connection is
 
 ## Future Features
 
-- ** Account Linking
-- ** Verification Codes
-- ** Google Authentication
-- ** Password Protection
+- Account Linking
+- Verification Codes
+- Google Authentication
+- Password Protection
