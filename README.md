@@ -31,3 +31,5 @@ The next step is to create a channel named "staff-activity" in your server, this
 Once you have installed and setup the plugin, any user who connects to the server with the permission `mauth.verify` will be checked to see if their ip-address has changed. If their ip-address has changed, a message will be sent in the #staff-activity channel (Seen below).
 
 <img src="https://i.imgur.com/hZiYUDG.png">
+
+Accounts can also be deactivated by clicking the ❌ button when a connection is flagged or by using the using the command `!deactivate <username>` and can be reactivated using `!reactivate <username>`
