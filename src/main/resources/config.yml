@@ -1,0 +1,11 @@
+mysql:
+  enabled: false
+  host: ""
+  port: 3306
+  database: ""
+  username: ""
+  password: ""
+mongodb:
+  enabled: false
+bot:
+  auth: ""

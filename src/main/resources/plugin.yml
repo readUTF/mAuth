@@ -1,0 +1,4 @@
+name: mAuth
+version: ${project.version}
+main: com.readutf.mauth.mAuth
+api-version: 1.16
