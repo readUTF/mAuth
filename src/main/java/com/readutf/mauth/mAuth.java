@@ -1,7 +1,6 @@
 package com.readutf.mauth;
 
 
-import com.readutf.fedex.FedEx;
 import com.readutf.mauth.bot.mAuthBot;
 import com.readutf.mauth.database.Database;
 import com.readutf.mauth.database.impl.FlatFile;
@@ -23,7 +22,6 @@ public class mAuth extends JavaPlugin {
     @Getter private static mAuth instance;
 
     Database database;
-    FedEx fedEx;
     mAuthBot mAuthBot;
 
     @Override
