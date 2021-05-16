@@ -1,13 +1,17 @@
 package com.readutf.mauth.listener;
 
 import com.readutf.mauth.bot.authfailed.AuthFailedData;
+import com.readutf.mauth.bot.messages.MessageHandler;
 import com.readutf.mauth.database.Database;
 import com.readutf.mauth.mAuth;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -15,9 +19,14 @@ import java.util.logging.Level;
 public class PlayerJoin implements Listener {
 
     @EventHandler
-    public void onJoin(AsyncPlayerPreLoginEvent e) {
-        UUID uuid = e.getUniqueId();
-        String address = e.getAddress().getHostAddress();
+    public void onJoin(PlayerJoinEvent e) {
+
+        Player player = e.getPlayer();
+
+        if(!player.hasPermission("mauth.verify")) return;
+
+        UUID uuid = player.getUniqueId();
+        String address = player.getAddress().getHostString();
         Database database = mAuth.getInstance().getDatabase();
 
 
@@ -26,22 +35,19 @@ public class PlayerJoin implements Listener {
         if (!database.isSet(uuid)) {
 
             database.setPreviousIp(uuid, address);
-
             Bukkit.getLogger().log(Level.SEVERE, "Connect verified... [First Join]");
             return;
         }
         String lastAddress = database.getPreviousIp(uuid);
         if (lastAddress.equalsIgnoreCase("disabled")) {
-            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
-            e.setKickMessage(ChatColor.translateAlternateColorCodes('&',"&cYour account has been disabled for suspecious activity \nplease contact an administrator" ));
+            player.kickPlayer(ChatColor.translateAlternateColorCodes('&',"&cYour account has been disabled for suspecious activity \nplease contact an administrator" ));
             return;
         }
 
         if (!lastAddress.equalsIgnoreCase(address)) {
             Bukkit.getLogger().log(Level.SEVERE, "Connect unverified [Location Changed]");
-            mAuth.getInstance().getMAuthBot().getMessageHandler().sendMessage(new AuthFailedData(uuid, lastAddress, address, e.getName()));
-            e.setKickMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
-            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
+            MessageHandler.sendMessage(new AuthFailedData(uuid, lastAddress, address, player.getName()));
+            player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
         }
 
 

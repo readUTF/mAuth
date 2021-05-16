@@ -14,7 +14,7 @@ public class MessageHandler {
     @Getter
     private static HashMap<Message, AuthFailedData> messages = new HashMap<>();
 
-    public void sendMessage(AuthFailedData parcel) {
+    public static void sendMessage(AuthFailedData parcel) {
         mAuthBot
                 .getInstance()
                 .getJda()

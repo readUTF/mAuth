@@ -18,6 +18,10 @@ public class DiscordCommands extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if(event.getGuild().getTextChannelsByName("staff-activity", true).isEmpty()) return;
+        if(!event.getGuild().getTextChannelsByName("staff-activity", true).contains(event.getTextChannel())) return;
+
+
         String message = event.getMessage().getContentRaw();
 
         if(!message.startsWith("!")) {

@@ -1,3 +1,5 @@
+bot:
+  auth: ""
 mysql:
   enabled: false
   host: ""
@@ -7,5 +9,6 @@ mysql:
   password: ""
 mongodb:
   enabled: false
-bot:
-  auth: ""
+  host: ""
+  port: 3306
+  database: ""

@@ -67,7 +67,7 @@ public class mAuth extends JavaPlugin {
             mySQL.connect();
             database = mySQL;
         } else if(getConfig().getBoolean("mongodb.enabled")) {
-            database = new Mongo("127.0.0.1", 27017, "mauth");
+            database = new Mongo(config.getString("mongodb.host"), config.getInt("mongodb.port"), config.getString("mongodb.database"));
         } else {
             database = new FlatFile();
         }
