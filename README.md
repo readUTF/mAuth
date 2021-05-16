@@ -34,7 +34,7 @@ Once you have installed and setup the plugin, any user who connects to the serve
 
 Accounts can also be deactivated by clicking the ❌ button when a connection is flagged or by using the using the discord command `!deactivate <username>` and can be reactivated using `!reactivate <username>`
 
-##Future Features
+## Future Features
 
 ** Account Linking
 ** Verification Codes
