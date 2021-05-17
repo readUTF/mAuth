@@ -2,3 +2,9 @@ name: mAuth
 version: ${project.version}
 main: com.readutf.mauth.mAuth
 api-version: 1.16
+commands:
+  verifyaddress:
+  deactivate:
+  reactivate:
+  sync:
+  2fa:

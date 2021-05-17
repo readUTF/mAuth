@@ -12,3 +12,11 @@ mongodb:
   host: ""
   port: 3306
   database: ""
+sync:
+  message:
+    - "&eTo sync your account, please follow the following steps:"
+    - ""
+    - " &61. &eJoin our discord: discord.example.net"
+    - " &62. &eEnter the channel #sync-account and send the code &6{code}"
+    - " &63. &eSuccess! If everything went right your account is now synced!"
+    - ""

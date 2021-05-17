@@ -3,6 +3,7 @@ package com.readutf.mauth.bot.messages;
 import com.readutf.mauth.ipdata.GeoLocationApi;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.bukkit.entity.Player;
 
 import java.awt.*;
 import java.util.UUID;
@@ -38,6 +39,16 @@ public class MessageLang {
         embedBuilder.setColor(Color.RED);
         embedBuilder.setTitle("Account Disabled");
         embedBuilder.setDescription(username + "'s account has been disabled by '" + user);
+        return embedBuilder.build();
+    }
+
+    public static MessageEmbed getVerificationMessage(Player player) {
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(Color.RED);
+        embedBuilder.setTitle("Attention Required");
+        embedBuilder.setDescription("A login attempt has been made on your account, is this you?");
+        embedBuilder.addField("New Location", GeoLocationApi.getCountry(player.getAddress().getAddress().getHostName()), true);
+        embedBuilder.setFooter("Click ✅ to verify connection or ❌ to disable account");
         return embedBuilder.build();
     }
 

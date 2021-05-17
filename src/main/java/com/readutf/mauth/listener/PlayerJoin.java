@@ -1,54 +1,67 @@
 package com.readutf.mauth.listener;
 
+import com.cryptomorin.xseries.XPotion;
 import com.readutf.mauth.bot.authfailed.AuthFailedData;
 import com.readutf.mauth.bot.messages.MessageHandler;
-import com.readutf.mauth.database.Database;
 import com.readutf.mauth.mAuth;
+import com.readutf.mauth.profile.Profile;
+import com.readutf.mauth.utils.SpigotUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.UUID;
 import java.util.logging.Level;
 
 public class PlayerJoin implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-
-        Player player = e.getPlayer();
-
-        if(!player.hasPermission("mauth.verify")) return;
-
-        UUID uuid = player.getUniqueId();
-        String address = player.getAddress().getHostString();
-        Database database = mAuth.getInstance().getDatabase();
+    public void onJoin(AsyncPlayerPreLoginEvent e) {
 
 
-        Bukkit.getLogger().log(Level.SEVERE, "Verifying connection... ");
+        Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(e.getUniqueId());
 
-        if (!database.isSet(uuid)) {
+        if(!profile.isVerifyAddress()) return;
 
-            database.setPreviousIp(uuid, address);
-            Bukkit.getLogger().log(Level.SEVERE, "Connect verified... [First Join]");
+
+        if(profile.isDeactivated()) {
+            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
+            e.setKickMessage(ChatColor.translateAlternateColorCodes('&',"&cYour account has been disabled for suspecious activity \nplease contact an administrator" ));
             return;
         }
-        String lastAddress = database.getPreviousIp(uuid);
-        if (lastAddress.equalsIgnoreCase("disabled")) {
-            player.kickPlayer(ChatColor.translateAlternateColorCodes('&',"&cYour account has been disabled for suspecious activity \nplease contact an administrator" ));
+        String address = e.getAddress().getHostName();
+
+
+        if(profile.getIp() == null) {
+            profile.setIp(address);
+            mAuth.getInstance().getProfileDatabase().saveProfile(profile);
             return;
         }
-
-        if (!lastAddress.equalsIgnoreCase(address)) {
+        if(!profile.getIp().equalsIgnoreCase(address)) {
             Bukkit.getLogger().log(Level.SEVERE, "Connect unverified [Location Changed]");
-            MessageHandler.sendMessage(new AuthFailedData(uuid, lastAddress, address, player.getName()));
-            player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
+            MessageHandler.sendLocationChangeMessage(new AuthFailedData(e.getUniqueId(), profile.getIp(), address, e.getName()));
+            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
+            e.setKickMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
         }
+
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(e.getPlayer().getUniqueId());
+
+        if(profile.isTfa()) {
+            player.sendMessage(SpigotUtils.color("&cYour previous session expired, please check discord to authenticate."));
+            player.addPotionEffect(XPotion.SLOW.parsePotion(Integer.MAX_VALUE, 255));
+
+            MessageHandler.send2FA(profile);
+            return;
+        }
+
 
 
     }

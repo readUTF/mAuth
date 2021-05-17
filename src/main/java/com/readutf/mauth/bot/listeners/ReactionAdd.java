@@ -4,6 +4,8 @@ package com.readutf.mauth.bot.listeners;
 import com.readutf.mauth.bot.messages.MessageHandler;
 import com.readutf.mauth.bot.messages.MessageLang;
 import com.readutf.mauth.mAuth;
+import com.readutf.mauth.profile.Profile;
+import com.readutf.mauth.profile.ProfileDatabase;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,12 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class MessageListener extends ListenerAdapter {
+public class ReactionAdd extends ListenerAdapter {
 
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         List<Message> remove = new ArrayList<>();
+
 
         AtomicBoolean ran = new AtomicBoolean(false);
 
@@ -39,7 +42,9 @@ public class MessageListener extends ListenerAdapter {
                 });
 
                 if (!ran.get()) {
-                    mAuth.getInstance().getDatabase().setPreviousIp(data.getUuid(), data.getNewIp());
+                    Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(data.getUuid());
+                    profile.setIp(data.getNewIp());
+                    profile.save();
                     ran.set(true);
                 }
 
@@ -55,8 +60,11 @@ public class MessageListener extends ListenerAdapter {
                     });
 
                     if (!ran.get()) {
-                        mAuth.getInstance().getDatabase().setPreviousIp(data.getUuid(), "disabled");
-                        ran.set(true);
+                        Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(data.getUuid());
+                        profile.setIp(data.getNewIp());
+                        profile.setDeactivated(true);
+                        profile.save();
+                        return;
                     }
                 }
             }

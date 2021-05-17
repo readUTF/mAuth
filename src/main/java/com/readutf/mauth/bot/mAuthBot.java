@@ -1,7 +1,8 @@
 package com.readutf.mauth.bot;
 
 import com.readutf.mauth.bot.commands.DiscordCommands;
-import com.readutf.mauth.bot.listeners.MessageListener;
+import com.readutf.mauth.bot.listeners.ReactionAdd;
+import com.readutf.mauth.bot.listeners.SyncMessageListener;
 import com.readutf.mauth.bot.messages.MessageHandler;
 import com.readutf.mauth.mAuth;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class mAuthBot implements Listener {
 
 
         jda = JDABuilder.createDefault(configuration.getString("bot.key"))
-                .addEventListeners(new MessageListener(), new DiscordCommands())
+                .addEventListeners(new ReactionAdd(), new DiscordCommands(), new SyncMessageListener())
                 .build();
 
         messageHandler = new MessageHandler();
