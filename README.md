@@ -4,8 +4,9 @@ mAuth is a open-source staff verification plugin and discord bot for spigot serv
 
 ## Getting Started
 
-To use this plugin you will need a discord bot token, you can read [here](https://www.writebots.com/discord-bot-token/) for help finding your token. Make sure that the bot has the permission to modify/delete other users messages 
-You can also define a mysql or mongodb database in the config.yml generated when the server starts (See Below).
+
+
+To use this plugin you will need a discord bot token, you can read [here](https://www.writebots.com/discord-bot-token/) for help finding your token. Make sure that the bot has the permission to modify/delete other users messages. Once the jar is added into your plugins folder, a config.yml file will be generated, where you are able to specify your discord token. You can also define a mysql or mongodb database in the config.yml generated when the server starts (See Below).
 
 ```yml
 bot:
