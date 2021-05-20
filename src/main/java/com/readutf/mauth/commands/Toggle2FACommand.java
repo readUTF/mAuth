@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.stream.IntStream;
+
 public class Toggle2FACommand implements CommandExecutor {
 
     @Override
@@ -26,14 +28,39 @@ public class Toggle2FACommand implements CommandExecutor {
 
 
         Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(player.getUniqueId());
-        profile.setTfa(!profile.isTfa());
-        if(profile.isTfa()) {
-            player.sendMessage(SpigotUtils.color("&aYou have enabled 2 factor authentication, you will receive your code when you join."));
-            return true;
-        } else {
-            player.sendMessage(SpigotUtils.color("&cYou have disabled 2 factor authentication."));
-            return true;
-        }
+        if(mAuth.getInstance().getConfig().getString("2fa.type").equalsIgnoreCase("discord")) {
+            if(profile.getDiscordId() != null) {
+                player.sendMessage(SpigotUtils.color("You have not linked your discord yet, please use /sync"));
 
+                return true;
+            }
+            profile.setTfa(!profile.isTfa());
+            if(profile.isTfa()) {
+                player.sendMessage(SpigotUtils.color("&aYou have enabled 2 factor authentication, you will receive your code when you join."));
+                return true;
+            } else {
+                player.sendMessage(SpigotUtils.color("&cYou have disabled 2 factor authentication."));
+                return true;
+            }
+        } else {
+            profile.save();
+            String key = profile.getGAuthKey();
+
+            if(args.length == 0) {
+                player.sendMessage(key);
+            } else {
+
+                System.out.println(profile.getTOTPCode());
+
+                if(profile.getTOTPCode().equalsIgnoreCase(args[0])) {
+                    player.sendMessage("it worked!!!");
+                } else {
+                    player.sendMessage("pain");
+                }
+
+            }
+
+        }
+        return true;
     }
 }

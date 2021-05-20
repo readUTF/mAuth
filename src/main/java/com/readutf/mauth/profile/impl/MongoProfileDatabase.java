@@ -60,42 +60,33 @@ public class MongoProfileDatabase extends ProfileDatabase {
     @Override
     public Profile getProfile(UUID uuid) {
 
-        System.out.println(getProfiles());
-
         Profile profile = getProfiles().stream().filter(profile1 -> profile1.getUuid().equals(uuid)).findFirst().orElse(null);
 
 
         if (profile == null) {
+            profile = new Profile(uuid);
             Document document = getDocument(uuid);
-            String previousIp = null, discord = null;
-            boolean deactivated = false;
-            boolean verifyAddress = false;
-            boolean tfa = false;
 
 
             if (document.containsKey("previousIp")) {
-                previousIp = document.getString("previousIp");
+                profile.setIp(document.getString("previousIp"));
             }
             if (document.containsKey("discord")) {
-                discord = document.getString("discord");
+                profile.setDiscordId(document.getString("discord"));
             }
             if (document.containsKey("deactivated")) {
-                deactivated = document.getBoolean("deactivated");
+                profile.setDeactivated(document.getBoolean("deactivated"));
             }
             if (document.containsKey("verifyAddress")) {
-                verifyAddress = document.getBoolean("verifyAddress");
+                profile.setVerifyAddress(document.getBoolean("verifyAddress"));
             }
             if(document.containsKey("2fa")) {
-                tfa = document.getBoolean("2fa");
+                profile.setTfa(document.getBoolean("2fa"));
+            }
+            if(document.containsKey("gAuth")) {
+                profile.setGAuthKey(document.getString("gAuth"));
             }
 
-
-            profile = new Profile(uuid,
-                    previousIp,
-                    discord,
-                    deactivated,
-                    verifyAddress,
-                    tfa);
             getProfiles().add(profile);
         }
 
@@ -110,6 +101,9 @@ public class MongoProfileDatabase extends ProfileDatabase {
         }
         if (profile.getDiscordId() != null) {
             document.put("discord", profile.getDiscordId());
+        }
+        if(profile.getGAuthKey() != null) {
+            document.put("gAuth", profile.getGAuthKey());
         }
         document.put("deactivated", profile.isDeactivated());
         document.put("verifyAddress", profile.isVerifyAddress());

@@ -5,8 +5,10 @@ import com.readutf.mauth.mAuth;
 import com.readutf.mauth.profile.Profile;
 import com.readutf.mauth.utils.UUIDCache;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,14 +20,12 @@ import java.util.stream.Collectors;
 
 public class DiscordCommands extends ListenerAdapter {
 
-
-
+    
     @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if(event.getGuild().getTextChannelsByName("staff-activity", true).isEmpty()) return;
-        if(!event.getGuild().getTextChannelsByName("staff-activity", true).contains(event.getTextChannel())) return;
-
-
+        if(!event.getGuild().getTextChannelsByName("staff-activity", true).contains(event.getChannel())) return;
+        
         String message = event.getMessage().getContentRaw();
 
         if(!message.startsWith("!")) {
@@ -38,7 +38,7 @@ public class DiscordCommands extends ListenerAdapter {
         if(args[0].equalsIgnoreCase("reactivate")) {
             event.getMessage().delete().queue();
             if(args.length < 2) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Usage: !reactivate <username>").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Usage: !reactivate <username>").build()).queue();
                 return;
             }
 
@@ -46,43 +46,42 @@ public class DiscordCommands extends ListenerAdapter {
             UUID uuid = UUIDCache.getUUID(username);
             Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(uuid);
             if(uuid == null) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Invalid Username").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Invalid Username").build()).queue();
                 return;
             }
 
             if(!profile.isDeactivated()) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Account is not deactivated").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Account is not deactivated").build()).queue();
                 return;
             }
             profile.setDeactivated(false);
             profile.save();
 
-            event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.GREEN).setTitle("Account Reactivated").setDescription(username + "'s account has been reactivated.").build()).queue();
+            event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.GREEN).setTitle("Account Reactivated").setDescription(username + "'s account has been reactivated.").build()).queue();
         } else if(args[0].equalsIgnoreCase("deactivate")) {
 
             event.getMessage().delete().queue();
             if(args.length < 2) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Usage: !deactivate <username>").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Usage: !deactivate <username>").build()).queue();
                 return;
             }
 
             String username = args[1];
             UUID uuid = UUIDCache.getUUID(username);
             Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(uuid);
-            System.out.println(profile);
             if(uuid == null) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Invalid Username").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Invalid Username").build()).queue();
                 return;
             }
 
             if(profile.isDeactivated()) {
-                event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Account already deactivated").build()).queue();
+                event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.ORANGE).setTitle("Account already deactivated").build()).queue();
                 return;
             }
 
             profile.setDeactivated(true);
             profile.save();
-            event.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.RED).setTitle("Account Deactivated").setDescription(username + "'s account has been deactivated.").build()).queue();
+            event.getChannel().sendMessage(new EmbedBuilder().setColor(Color.RED).setTitle("Account Deactivated").setDescription(username + "'s account has been deactivated.").build()).queue();
         }
 
 

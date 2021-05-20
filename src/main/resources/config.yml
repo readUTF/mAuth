@@ -1,4 +1,8 @@
+#DO NOT CHANGE OR REVEAL THIS CODE
+gauth-secret: ""
 bot:
+  #This enables any feature that involves discord syncing.
+  enabled: false
   auth: ""
 mysql:
   enabled: false
@@ -12,6 +16,12 @@ mongodb:
   host: ""
   port: 3306
   database: ""
+location-change:
+  #if set to false, verification will take place through the server.
+  use-discord: true
+2fa:
+  #must be DISCORD or GOOGLE
+  type: "DISCORD"
 sync:
   message:
     - "&eTo sync your account, please follow the following steps:"

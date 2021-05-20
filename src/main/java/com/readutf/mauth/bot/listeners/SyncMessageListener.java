@@ -32,8 +32,6 @@ public class SyncMessageListener extends ListenerAdapter {
             if(player != null) {
                 player.sendMessage(SpigotUtils.color("&aYour account was synced successfully."));
                 XSound.ENTITY_ARROW_HIT_PLAYER.play(player);
-
-
             }
         }
 

@@ -42,13 +42,11 @@ public class MessageLang {
         return embedBuilder.build();
     }
 
-    public static MessageEmbed getVerificationMessage(Player player) {
+    public static MessageEmbed getVerificationMessage() {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setColor(Color.RED);
         embedBuilder.setTitle("Attention Required");
-        embedBuilder.setDescription("A login attempt has been made on your account, is this you?");
-        embedBuilder.addField("New Location", GeoLocationApi.getCountry(player.getAddress().getAddress().getHostName()), true);
-        embedBuilder.setFooter("Click ✅ to verify connection or ❌ to disable account");
+        embedBuilder.setDescription("A login attempt has been made on your account, click here to verify.");
         return embedBuilder.build();
     }
 

@@ -3,11 +3,10 @@ package com.readutf.mauth;
 
 import com.readutf.mauth.bot.mAuthBot;
 import com.readutf.mauth.commands.*;
-import com.readutf.mauth.listener.ErrorJoin;
-import com.readutf.mauth.listener.PlayerJoin;
-import com.readutf.mauth.listener.PlayerQuit;
+import com.readutf.mauth.listener.*;
 import com.readutf.mauth.profile.ProfileDatabase;
 import com.readutf.mauth.profile.impl.MongoProfileDatabase;
+import com.readutf.mauth.utils.SecureKeyGenerator;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,6 +23,8 @@ public class mAuth extends JavaPlugin {
 
     ProfileDatabase profileDatabase;
     mAuthBot mAuthBot;
+
+    String gAuthSecret;
 
     @Override
     public void onEnable() {
@@ -64,9 +65,15 @@ public class mAuth extends JavaPlugin {
 
         Arrays.asList(
                 new PlayerJoin(),
-                new PlayerQuit()
+                new PlayerQuit(),
+                new AuthListener(),
+                new PlayerChat()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
 
+        if (!getConfig().isSet("gauth-secret")) {
+            gAuthSecret = SecureKeyGenerator.generateSecretKey();
+            getConfig().set("gauth-secret", gAuthSecret);
+        }
 
 
         getCommand("verifyaddress").setExecutor(new VerifyAddressCommand());
