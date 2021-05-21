@@ -32,6 +32,8 @@ public  class Profile {
         this.deactivated = false;
         this.verifyAddress = false;
         this.tfa = false;
+        this.authed = getPlayer() != null;
+
     }
 
     public void setDeactivated(boolean deactivated) {
@@ -59,7 +61,6 @@ public  class Profile {
     }
 
     public String getGAuthKey() {
-        System.out.println(gAuthKey);
         if(gAuthKey == null)  {
             generateGAuthKey();
         }

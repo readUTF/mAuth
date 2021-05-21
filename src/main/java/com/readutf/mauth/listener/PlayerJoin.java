@@ -103,7 +103,7 @@ public class PlayerJoin implements Listener {
 
                                 @Override
                                 public void run() {
-                                    if(profile.isAuthed()) {this.cancel(); return;}
+                                    if(profile.isAuthed() || (player == null || player.isOnline())) {this.cancel(); return;}
 
                                     int timeUntill = 20 - (int) TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis() - start);
 
@@ -123,7 +123,7 @@ public class PlayerJoin implements Listener {
                                 }
                             }.runTaskTimer(mAuth.getInstance(), 0, 5);
                         }
-                    }.runTaskLater(mAuth.getInstance(), 20);
+                    }.runTaskLater(mAuth.getInstance(), 1);
                 }
 
             } else {

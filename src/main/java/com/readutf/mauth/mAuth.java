@@ -45,29 +45,33 @@ public class mAuth extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
-        String botKey = getConfig().getString("bot.key");
 
-        if (botKey == null || botKey.equalsIgnoreCase("")) {
-            Bukkit.getLogger().log(Level.FINE, "Discord key was not set in the config.yml");
-            Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
-            return;
-        }
+        if(getConfig().getBoolean("bot.enabled")) {
+            String botKey = getConfig().getString("bot.key");
+            if (botKey == null || botKey.equalsIgnoreCase("")) {
+                Bukkit.getLogger().log(Level.FINE, "Discord key was not set in the config.yml");
+                Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
+                return;
+            }
 
 
-        try {
-            mAuthBot = new mAuthBot(this);
-        } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Error loading JDA");
-            e.printStackTrace();
-            Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
-            return;
+            try {
+                mAuthBot = new mAuthBot(this);
+            } catch (Exception e) {
+                Bukkit.getLogger().log(Level.SEVERE, "Error loading JDA");
+                e.printStackTrace();
+                Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
+                return;
+            }
         }
 
         Arrays.asList(
                 new PlayerJoin(),
                 new PlayerQuit(),
                 new AuthListener(),
-                new PlayerChat()
+                new PlayerChat(),
+                new ItemDrop(),
+                new ItemMove()
         ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
 
         if (!getConfig().isSet("gauth-secret")) {
@@ -83,21 +87,6 @@ public class mAuth extends JavaPlugin {
         getCommand("2fa").setExecutor(new Toggle2FACommand());
 
         FileConfiguration config = getConfig();
-
-//        if(getConfig().getBoolean("mysql.enabled")) {
-//            MySQL mySQL = new MySQL(config.getString("mysql.host"),
-//                    config.getString("mysql.database"),
-//                    config.getString("mysql.username"),
-//                    config.getString("mysql.password"),
-//                    config.getInt("mysql.port"));
-//            mySQL.connect();
-//            database = mySQL;
-//        } else
-//        if(getConfig().getBoolean("mongodb.enabled")) {
-//            database = new Mongo(config.getString("mongodb.host"), config.getInt("mongodb.port"), config.getString("mongodb.database"));
-//        } else {
-//            database = new FlatFile();
-//        }
 
         profileDatabase = new MongoProfileDatabase(config.getString("mongodb.host"), config.getInt("mongodb.port"), config.getString("mongodb.database"));
     }
