@@ -52,7 +52,7 @@ Two factor authentication has two modes, 'discord' and 'google, which can be swi
 ### Discord Mode 
 On connection, the user will be unable to move or interact with the server. A message will be sent to the users linked discord account (See Discord Sync Section) which when reacted to will authenticate and unfreeze the player.
 
-<img src="https://i.imgur.com/8bxwjfQ.png">
-<img src="https://i.imgur.com/Md1f8FH.png">
+<img src="https://i.imgur.com/8bxwjfQ.png" height="640" width="339">
+<img src="https://i.imgur.com/9Nkuhk4.png">
 
 
