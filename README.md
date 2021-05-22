@@ -45,17 +45,14 @@ sync:
 
 The next step is to create a channel named "staff-activity" in your server, this is where the bottom will send messages and allow you to authenticate/disable accounts.
 
-## Using the plugin
+## 2FA
 
-Once you have installed and setup the plugin, any user who connects to the server with the permission `mauth.verify` will be checked to see if their ip-address has changed. If their ip-address has changed, a message will be sent in the #staff-activity channel (Seen below).
+Two factor authentication has two modes, 'discord' and 'google, which can be switchen between in the config.yml
 
-<img src="https://i.imgur.com/hZiYUDG.png">
+### Discord Mode 
+On connection, the user will be unable to move or interact with the server. A message will be sent to the users linked discord account (See Discord Sync Section) which when reacted to will authenticate and unfreeze the player.
 
-Accounts can also be deactivated by clicking the ❌ button when a connection is flagged or by using the using the discord command `!deactivate <username>` and can be reactivated using `!reactivate <username>`
+<img src"https://i.imgur.com/8bxwjfQ.png">
+<img src"https://i.imgur.com/Md1f8FH.png">
 
-## Future Features
 
-- Account Linking
-- Verification Codes
-- Google Authentication
-- Password Protection
