@@ -60,4 +60,6 @@ On connection, the user will be unable to move or interact with the server. A me
 Google mode works the same as discord mode. On join, the user is frozen and cannot interact with the server untill a code is entered. This code is generated using the Google Authenticator app, which is linked usign a QR Code.
 
 <img src="https://i.imgur.com/ueYQEen.png" width="640" height="339">
+<img src="https://i.imgur.com/FikVprR.jpg" width="420" height="207">
+
 
