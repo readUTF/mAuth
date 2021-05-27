@@ -19,11 +19,15 @@ public class VerifyAddressCommand implements CommandExecutor {
             sender.sendMessage(SpigotUtils.color("&cNo Perm."));
             return true;
         }
-
-        if(args.length < 1) {
-            sender.sendMessage(SpigotUtils.color("Usage: /" + c + " <player>"));
+        if(!mAuth.getInstance().isUseDiscord()) {
+            sender.sendMessage(SpigotUtils.color("&cThis feature requires the discord bot to be enabled."));
             return true;
         }
+        if(args.length < 1) {
+            sender.sendMessage(SpigotUtils.color("&cUsage: /" + c + " <player>"));
+            return true;
+        }
+
 
 
         UUID uuid = UUIDCache.getUUID(args[0]);

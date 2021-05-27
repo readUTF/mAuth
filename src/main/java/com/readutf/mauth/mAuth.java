@@ -25,6 +25,7 @@ public class mAuth extends JavaPlugin {
     mAuthBot mAuthBot;
 
     String gAuthSecret;
+    boolean useDiscord;
 
     @Override
     public void onEnable() {
@@ -45,16 +46,16 @@ public class mAuth extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         saveConfig();
 
+        FileConfiguration config = getConfig();
+        useDiscord = config.getBoolean("bot.enabled");
 
-        if(getConfig().getBoolean("bot.enabled")) {
-            String botKey = getConfig().getString("bot.key");
+        if(useDiscord) {
+            String botKey = config.getString("bot.key");
             if (botKey == null || botKey.equalsIgnoreCase("")) {
                 Bukkit.getLogger().log(Level.FINE, "Discord key was not set in the config.yml");
                 Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
                 return;
             }
-
-
             try {
                 mAuthBot = new mAuthBot(this);
             } catch (Exception e) {
@@ -65,28 +66,10 @@ public class mAuth extends JavaPlugin {
             }
         }
 
-        Arrays.asList(
-                new PlayerJoin(),
-                new PlayerQuit(),
-                new AuthListener(),
-                new PlayerChat(),
-                new ItemDrop(),
-                new ItemMove()
-        ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
 
-        if (!getConfig().isSet("gauth-secret")) {
-            gAuthSecret = SecureKeyGenerator.generateSecretKey();
-            getConfig().set("gauth-secret", gAuthSecret);
-        }
+        registerEvents();
+        registerCommands();
 
-
-        getCommand("verifyaddress").setExecutor(new VerifyAddressCommand());
-        getCommand("deactivate").setExecutor(new DeactivateCommand());
-        getCommand("reactivate").setExecutor(new ReActivateCommand());
-        getCommand("sync").setExecutor(new SyncCommand());
-        getCommand("2fa").setExecutor(new Toggle2FACommand());
-
-        FileConfiguration config = getConfig();
 
         profileDatabase = new MongoProfileDatabase(config.getString("mongodb.host"), config.getInt("mongodb.port"), config.getString("mongodb.database"));
     }
@@ -95,6 +78,24 @@ public class mAuth extends JavaPlugin {
     public void onDisable() {
     }
 
+    public void registerCommands() {
+        getCommand("verifyaddress").setExecutor(new VerifyAddressCommand());
+        getCommand("deactivate").setExecutor(new DeactivateCommand());
+        getCommand("reactivate").setExecutor(new ReActivateCommand());
+        getCommand("sync").setExecutor(new SyncCommand());
+        getCommand("2fa").setExecutor(new Toggle2FACommand());
+    }
+
+    public void registerEvents() {
+        Arrays.asList(
+                new PlayerJoin(),
+                new PlayerQuit(),
+                new AuthListener(),
+                new PlayerChat(),
+                new ItemDrop(),
+                new ItemMove()
+        ).forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
+    }
 
 
 }

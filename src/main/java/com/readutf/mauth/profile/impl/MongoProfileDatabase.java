@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.readutf.mauth.profile.Profile;
 import com.readutf.mauth.profile.ProfileDatabase;
+import com.readutf.mauth.utils.timeprofiler.TimeProfiler;
 import lombok.Getter;
 import org.bson.Document;
 
@@ -60,13 +61,17 @@ public class MongoProfileDatabase extends ProfileDatabase {
     @Override
     public Profile getProfile(UUID uuid) {
 
+
+
         Profile profile = getProfiles().stream().filter(profile1 -> profile1.getUuid().equals(uuid)).findFirst().orElse(null);
 
 
         if (profile == null) {
+            TimeProfiler timeProfiler = new TimeProfiler();
             profile = new Profile(uuid);
             Document document = getDocument(uuid);
 
+            timeProfiler.addCheckPoint("1");
 
             if (document.containsKey("previousIp")) {
                 profile.setIp(document.getString("previousIp"));
@@ -88,7 +93,12 @@ public class MongoProfileDatabase extends ProfileDatabase {
             }
 
             getProfiles().add(profile);
+
+            timeProfiler.printProfile();
+
         }
+
+
 
         return profile;
     }

@@ -43,7 +43,7 @@ public class Toggle2FACommand implements CommandExecutor {
 
 
         Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(player.getUniqueId());
-        if(mAuth.getInstance().getConfig().getString("2fa.type").equalsIgnoreCase("discord") && mAuth.getInstance().getConfig().getBoolean("bot.enabled")) {
+        if(mAuth.getInstance().getConfig().getString("2fa.type").equalsIgnoreCase("discord") && mAuth.getInstance().isUseDiscord()) {
 
             if(profile.getDiscordId() == null) {
                 player.sendMessage(SpigotUtils.color("&cYou have not linked your discord yet, please use /sync"));

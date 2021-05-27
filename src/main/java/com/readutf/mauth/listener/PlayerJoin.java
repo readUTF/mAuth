@@ -29,7 +29,7 @@ public class PlayerJoin implements Listener {
 
         Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(e.getUniqueId());
 
-        if(!profile.isVerifyAddress()) return;
+        if(!profile.isVerifyAddress() && !mAuth.getInstance().isUseDiscord()) return;
 
 
         if(profile.isDeactivated()) {
@@ -52,18 +52,30 @@ public class PlayerJoin implements Listener {
             e.setKickMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
         }
 
+
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(e.getPlayer().getUniqueId());
+        e.setJoinMessage(null);
 
         long start = System.currentTimeMillis();
+
+        if(profile.isVerifyAddress()) {
+            player.sendMessage(SpigotUtils.color("&a[mAuth] Your connection has been verified."));
+        }
 
         if(profile.isTfa()) {
             if(System.currentTimeMillis() - profile.getLastAuth() > TimeUnit.HOURS.toMillis(2)) {
                 if(mAuth.getInstance().getConfig().getString("2fa.type").equalsIgnoreCase("discord")) {
+
+                    if(profile.getDiscordId() == null) {
+                        player.sendMessage(SpigotUtils.color("&cYou need to re-sync your discord account."));
+                        return;
+                    }
+
                     player.sendMessage(SpigotUtils.color("&cYour previous session expired, please check discord to authenticate."));
                     player.addPotionEffect(XPotion.SLOW.parsePotion(Integer.MAX_VALUE, 255));
                     player.addPotionEffect(XPotion.BLINDNESS.parsePotion(Integer.MAX_VALUE, 255));
