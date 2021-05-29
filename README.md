@@ -2,11 +2,12 @@
 
 mAuth is a open-source staff verification plugin and discord bot for spigot servers.
 
-## Getting Started
+## Setting Up The Bot
+
+Head over to https://discord.com/developers/applications, click 'new application' and create a bot [You can see more information here]https://discordpy.readthedocs.io/en/latest/discord.html. 
 
 
-
-To use this plugin you will need a discord bot token, you can read [here](https://www.writebots.com/discord-bot-token/) for help finding your token. Make sure that the bot has the permission to modify/delete other users messages. Once the jar is added into your plugins folder, a config.yml file will be generated, where you are able to specify your discord token. You can also define a mysql or mongodb database in the config.yml generated when the server starts (See Below).
+##Configuration
 
 ```yml
 #DO NOT CHANGE OR REVEAL THIS CODE
@@ -62,4 +63,6 @@ Google mode works the same as discord mode. On join, the user is frozen and cann
 <img src="https://i.imgur.com/ueYQEen.png" width="640" height="339">
 <img src="https://i.imgur.com/FikVprR.jpg" width="207" height="420">
 
+## Connection Verification
 
+The users current ip-address will be compaired to their previous connection ip, if this varies they will be unable to join and an alert will be sent to a channel named 'staff-activity' 
