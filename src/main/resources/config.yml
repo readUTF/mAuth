@@ -1,9 +1,7 @@
-#DO NOT CHANGE OR REVEAL THIS CODE
-gauth-secret: ""
 bot:
   #This enables any feature that involves discord syncing.
   enabled: false
-  auth: ""
+  key: ""
 mysql:
   enabled: false
   host: ""

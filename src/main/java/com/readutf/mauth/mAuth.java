@@ -50,7 +50,7 @@ public class mAuth extends JavaPlugin {
         useDiscord = config.getBoolean("bot.enabled");
 
         if(useDiscord) {
-            String botKey = config.getString("bot.key");
+            String botKey = config.getString("bot.token");
             if (botKey == null || botKey.equalsIgnoreCase("")) {
                 Bukkit.getLogger().log(Level.FINE, "Discord key was not set in the config.yml");
                 Bukkit.getPluginManager().registerEvents(new ErrorJoin(), this);
