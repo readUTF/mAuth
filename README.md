@@ -2,19 +2,21 @@
 
 mAuth is a open-source staff verification plugin and discord bot for spigot servers.
 
-## Getting Started
+## Setting Up The Bot
 
+Head over to https://discord.com/developers/applications, click 'new application' and create a bot (You can see more information here https://discordpy.readthedocs.io/en/latest/discord.html). Next step is to head over to the Bot Tab on the left, click 'Add Bot', here you can find your Token. Then navigate to the OAuth2 tab and within scopes click 'bot' and within bot permissions enable 'Administrator'. You can now use the link generated to invite the bot to your server. The bot will initiallly appear offline untill the plugin is loaded.
 
+## Setting up the plugin
 
-To use this plugin you will need a discord bot token, you can read [here](https://www.writebots.com/discord-bot-token/) for help finding your token. Make sure that the bot has the permission to modify/delete other users messages. Once the jar is added into your plugins folder, a config.yml file will be generated, where you are able to specify your discord token. You can also define a mysql or mongodb database in the config.yml generated when the server starts (See Below).
+The configuration for this plugin is relatively simple, it allows for certain messages and features to be configured / disabled. However the bot will be unable to start untill the token is defined within the bot section. By default the bot will function off of a flatfile format however mysql and mongodb are supported.
+
+##Configuration
 
 ```yml
-#DO NOT CHANGE OR REVEAL THIS CODE
-gauth-secret: ""
 bot:
   #This enables any feature that involves discord syncing.
   enabled: false
-  auth: ""
+  token: ""
 mysql:
   enabled: false
   host: ""
@@ -45,17 +47,27 @@ sync:
 
 The next step is to create a channel named "staff-activity" in your server, this is where the bottom will send messages and allow you to authenticate/disable accounts.
 
-## Using the plugin
+## 2FA
 
-Once you have installed and setup the plugin, any user who connects to the server with the permission `mauth.verify` will be checked to see if their ip-address has changed. If their ip-address has changed, a message will be sent in the #staff-activity channel (Seen below).
+Two factor authentication has two modes, 'discord' and 'google, which can be switchen between in the config.yml
 
-<img src="https://i.imgur.com/hZiYUDG.png">
+### Discord Mode 
+On connection, the user will be unable to move or interact with the server. A message will be sent to the users linked discord account (See Discord Sync Section) which when reacted to will authenticate and unfreeze the player.
 
-Accounts can also be deactivated by clicking the ❌ button when a connection is flagged or by using the using the discord command `!deactivate <username>` and can be reactivated using `!reactivate <username>`
+<img src="https://i.imgur.com/8bxwjfQ.png" width="640" height="339">
+<img src="https://i.imgur.com/9Nkuhk4.png">
 
-## Future Features
+### Google Mode
 
-- Account Linking
-- Verification Codes
-- Google Authentication
-- Password Protection
+Google mode works the same as discord mode. On join, the user is frozen and cannot interact with the server untill a code is entered. This code is generated using the Google Authenticator app, which is linked usign a QR Code.
+
+<img src="https://i.imgur.com/ueYQEen.png" width="640" height="339">
+<img src="https://i.imgur.com/FikVprR.jpg" width="207" height="420">
+
+## Connection Verification
+
+The users current ip-address will be compaired to their previous connection ip, if this varies they will be unable to join and an alert will be sent to a channel named 'staff-activity'. Ip history is 
+
+<img src="https://i.imgur.com/HBEgIm9.png" width="744" height="261">
+<img src="https://i.imgur.com/VeKv5f1.png" width="414" height="229">
+
