@@ -6,7 +6,9 @@ import com.readutf.mauth.bot.messages.MessageHandler;
 import com.readutf.mauth.bot.messages.MessageLang;
 import com.readutf.mauth.mAuth;
 import com.readutf.mauth.profile.Profile;
+import com.readutf.mauth.utils.Hashing;
 import com.readutf.mauth.utils.SpigotUtils;
+import com.readutf.mauth.utils.timeprofiler.TimeProfiler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,11 +28,14 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void onJoin(AsyncPlayerPreLoginEvent e) {
 
+        TimeProfiler timeProfiler = new TimeProfiler();
+
 
         Profile profile = mAuth.getInstance().getProfileDatabase().getProfile(e.getUniqueId());
 
         if(!profile.isVerifyAddress() && !mAuth.getInstance().isUseDiscord()) return;
 
+        timeProfiler.addCheckPoint("1");
 
         if(profile.isDeactivated()) {
             e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
@@ -40,17 +45,26 @@ public class PlayerJoin implements Listener {
         String address = e.getAddress().getHostName();
 
 
+        timeProfiler.addCheckPoint("2");
         if(profile.getIp() == null) {
             profile.setIp(address);
             mAuth.getInstance().getProfileDatabase().saveProfile(profile);
             return;
         }
+
+
+        timeProfiler.addCheckPoint("3");
+
         if(!profile.getIp().equalsIgnoreCase(address)) {
             Bukkit.getLogger().log(Level.SEVERE, "Connect unverified [Location Changed]");
-            MessageHandler.sendLocationChangeMessage(new AuthFailedData(e.getUniqueId(), profile.getIp(), address, e.getName()));
+            Bukkit.getScheduler().runTaskAsynchronously(mAuth.getInstance(), () -> MessageHandler.sendLocationChangeMessage(new AuthFailedData(e.getUniqueId(), profile.getIp(), address, e.getName())));
             e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
             e.setKickMessage(ChatColor.translateAlternateColorCodes('&', "&cYou have connected from a different location \nPlease Contact an administrator."));
         }
+
+        timeProfiler.addCheckPoint("4");
+
+        timeProfiler.printProfile();
 
 
     }

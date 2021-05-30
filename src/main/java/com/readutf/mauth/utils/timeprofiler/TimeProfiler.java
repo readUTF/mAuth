@@ -32,7 +32,7 @@ public class TimeProfiler {
                     String current = checkPoints.keySet().toArray(new String[checkPoints.size()])[x];
                     String next = checkPoints.keySet().toArray(new String[checkPoints.size()])[x + 1];
 
-                    System.out.println(next + ": " + (checkPoints.get(next) - checkPoints.get(current)) + "ms");
+                    System.out.println(current  + " -> " + next + ": " + (checkPoints.get(next) - checkPoints.get(current)) + "ms");
                 }
             }
         }

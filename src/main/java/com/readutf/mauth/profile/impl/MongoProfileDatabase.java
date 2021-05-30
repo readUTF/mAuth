@@ -67,11 +67,9 @@ public class MongoProfileDatabase extends ProfileDatabase {
 
 
         if (profile == null) {
-            TimeProfiler timeProfiler = new TimeProfiler();
             profile = new Profile(uuid);
             Document document = getDocument(uuid);
 
-            timeProfiler.addCheckPoint("1");
 
             if (document.containsKey("previousIp")) {
                 profile.setIp(document.getString("previousIp"));
@@ -94,7 +92,6 @@ public class MongoProfileDatabase extends ProfileDatabase {
 
             getProfiles().add(profile);
 
-            timeProfiler.printProfile();
 
         }
 
