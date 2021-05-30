@@ -32,7 +32,7 @@ public class mAuthBot implements Listener {
         FileConfiguration configuration = javaPlugin.getConfig();
 
 
-        jda = JDABuilder.createDefault(configuration.getString("bot.key"))
+        jda = JDABuilder.createDefault(configuration.getString("bot.token"))
                 .addEventListeners(
                         new DiscordCommands(),
                         new SyncMessageListener(),
